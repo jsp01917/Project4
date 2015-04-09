@@ -1,6 +1,9 @@
 
 
 import javafx.scene.control.*;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -32,7 +35,7 @@ public class SnowmanFX extends Application {
 	StackPane root;
 	Canvas can;
 	GraphicsContext gc;
-	
+	Pane animationPane;
 	public static void main(String[] args){
 		launch(args);
 	}
@@ -41,13 +44,15 @@ public class SnowmanFX extends Application {
 	public void start(Stage primaryStage){
 		
 		root = new StackPane();
+		animationPane = new Pane();
 		can = new Canvas(300,300);
 		gc = can.getGraphicsContext2D();
 		
 		
 		root.getChildren().add(can);
-
-		drawSnowman(gc);
+		root.getChildren().add(animationPane);
+		drawSnowman(gc, root, animationPane);
+		
 		
 		primaryStage.setScene(new Scene(root, 500,500));
 		primaryStage.show();
@@ -57,7 +62,7 @@ public class SnowmanFX extends Application {
 	
 
 	
-	public void drawSnowman(GraphicsContext gc){
+	public void drawSnowman(GraphicsContext gc, StackPane sp, Pane pane){
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(5);
 		gc.stroke();
@@ -98,15 +103,57 @@ public class SnowmanFX extends Application {
 		gc.fillOval(145, 180, 10, 10);
 		
 		//left arm
-		gc.setFill(Color.BLACK);
-		gc.fillRect(10, 150, 75, 7.5);
-		gc.fillRect(215, 150, 75, 7.5);
+		Rectangle leftArm = new Rectangle(0,0,100,10);
+		leftArm.setFill(Color.BLACK);
+		leftArm.setLayoutX(100);
+		leftArm.setLayoutY(215);
+		pane.getChildren().add(leftArm);
+		RotateTransition leftArmAnimation = new RotateTransition(Duration.millis(1000), leftArm);
+		leftArmAnimation.setByAngle(60);
+		leftArmAnimation.setCycleCount(Timeline.INDEFINITE);
+		leftArmAnimation.setAutoReverse(true);
+		leftArmAnimation.play();
+	     
+	     Rectangle rightArm = new Rectangle(0,0,100,10);
+			rightArm.setFill(Color.BLACK);
+			rightArm.setLayoutX(300);
+			rightArm.setLayoutY(215);
+			pane.getChildren().add(rightArm);
+			RotateTransition rightArmAnimation = new RotateTransition(Duration.millis(1000), rightArm);
+			rightArmAnimation.setByAngle(-60);
+			rightArmAnimation.setCycleCount(Timeline.INDEFINITE);
+			rightArmAnimation.setAutoReverse(true);
+			rightArmAnimation.play();
+		
 		
 		//top hat
-		gc.setFill(Color.GREEN);
-		gc.fillRect(97.5, 10, 100, 5);
-		gc.fillRect(110, -60, 75, 75);
+		//gc.setFill(Color.GREEN);
+		//gc.fillRect(97.5, 10, 100, 5);
+		//gc.fillRect(110, -60, 75, 75);
+		
+			Rectangle hatPart1 = new Rectangle (0, 0, 100, 5);
+			Rectangle hatPart2 = new Rectangle (0, 0, 80, 80);
+			hatPart1.setLayoutX(198);
+			hatPart1.setLayoutY(110);
+			hatPart2.setLayoutX(208);
+			hatPart2.setLayoutY(30);
+			pane.getChildren().add(hatPart1);
+			pane.getChildren().add(hatPart2);
+		  
+		
+		 
+		     FillTransition hatAnimation1 = new FillTransition(Duration.millis(1000), hatPart1, Color.GREEN, Color.BLUE);
+		     FillTransition hatAnimation2 = new FillTransition(Duration.millis(1000), hatPart2, Color.GREEN, Color.BLUE);
+		     hatAnimation1.setCycleCount(Timeline.INDEFINITE);
+		     hatAnimation1.setAutoReverse(true);
+		 
+		     hatAnimation1.play();
+		     hatAnimation2.setCycleCount(Timeline.INDEFINITE);
+		     hatAnimation2.setAutoReverse(true);
+		 
+		     hatAnimation2.play();
 	}
 	
 	
 }
+

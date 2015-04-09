@@ -1,0 +1,1 @@
+This project consists of a snowman in JavaFX, which will be animated.
